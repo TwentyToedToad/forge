@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import forge.card.CardEdition;
 import forge.deck.DeckBase;
 import forge.game.GameType;
 import forge.gamemodes.quest.QuestController;
@@ -43,6 +44,8 @@ import forge.screens.deckeditor.views.VCardCatalog;
 import forge.screens.deckeditor.views.VCurrentDeck;
 import forge.screens.deckeditor.views.VDeckgen;
 import forge.screens.deckeditor.views.VProbabilities;
+import forge.screens.home.quest.BoosterPurchaseData;
+import forge.screens.home.quest.BuyBoosterDialog;
 import forge.screens.home.quest.CSubmenuQuestDecks;
 import forge.screens.match.controllers.CDetailPicture;
 import forge.toolbox.FLabel;
@@ -71,6 +74,8 @@ public final class CEditorQuestCardShop extends ACEditorBase<InventoryItem, Deck
             .fontSize(14).hoverable(true).cmdClick((UiCommand) this::toggleFullCatalog)
             .build();
 
+    private final FLabel buyBoosterToggle = new FLabel.Builder().text("Buy booster pack").fontSize(14).hoverable(true).cmdClick((UiCommand) this::toggleBuyBooster).build();
+
     private final QuestController questData;
 
     private ItemPool<InventoryItem> cardsForSale;
@@ -89,6 +94,8 @@ public final class CEditorQuestCardShop extends ACEditorBase<InventoryItem, Deck
     private String prevRem4Label = null;
     private String prevRem4Tooltip = null;
     private Runnable prevRem4Cmd = null;
+
+    private CardEdition prevSelectedCardEdition;
 
     /**
      * Child controller for quest card shop UI.
@@ -130,6 +137,15 @@ public final class CEditorQuestCardShop extends ACEditorBase<InventoryItem, Deck
             this.getBtnRemove().setEnabled(true);
             this.getBtnRemove4().setEnabled(true);
             fullCatalogToggle.setText("See full catalog");
+        }
+    }
+
+    private void toggleBuyBooster() {
+        BuyBoosterDialog dialog = prevSelectedCardEdition == null ? new BuyBoosterDialog() : new BuyBoosterDialog(prevSelectedCardEdition);
+        BoosterPurchaseData data = dialog.show();
+        if (data != null) {
+            prevSelectedCardEdition = data.edition;
+            onAddItems(data.items, false);
         }
     }
 
@@ -277,6 +293,7 @@ public final class CEditorQuestCardShop extends ACEditorBase<InventoryItem, Deck
         this.getCatalogManager().getPnlButtons().remove(this.getBtnAdd4());
         this.getCatalogManager().getPnlButtons().add(fullCatalogToggle, "w 25%, h 30!", 0);
         this.getCatalogManager().getPnlButtons().add(sellPercentageLabel);
+        this.getCatalogManager().getPnlButtons().add(buyBoosterToggle);
         this.sellPercentageLabel.setText("<html>Selling cards at " + formatter.format(multiPercent)
                 + "% of their value.<br>" + maxSellingPrice + "</html>");
 

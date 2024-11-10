@@ -77,21 +77,15 @@ public final class CardEdition implements Comparable<CardEdition> {
 
         public String getBoosterBoxDefault() {
             switch (this) {
-                case CORE:
-                case EXPANSION:
-                    return "36";
                 default:
-                    return "0";
+                    return "36";
             }
         }
 
         public String getFatPackDefault() {
             switch (this) {
-                case CORE:
-                case EXPANSION:
-                    return "10";
                 default:
-                    return "0";
+                    return "10";
             }
         }
 

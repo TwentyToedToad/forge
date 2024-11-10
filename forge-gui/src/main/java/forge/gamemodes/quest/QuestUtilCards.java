@@ -892,6 +892,34 @@ public final class QuestUtilCards {
 
     }
 
+    public int getCommanderCompletionPercentage(String edition) {
+        for (String color : SealedProduct.specialSets) {
+            if (color.equals(edition)) {
+                return 0;
+            }
+        }
+
+        if (edition.equals("?")) {
+            return 0;
+        }
+
+        Predicate<PaperCard> filter = IPaperCard.Predicates.printedInSet(edition);
+        Iterable<PaperCard> editionCards = Iterables.filter(FModel.getMagicDb().getCommonCards().getAllCards(), filter);
+
+        ItemPool<PaperCard> ownedCards = questAssets.getCardPool();
+        // 100% means at least one of every basic land and at least 4 of every other card in the set
+        int completeCards = 0;
+        int numOwnedCards = 0;
+        for (PaperCard card : editionCards) {
+            final int target = 1;
+
+            completeCards += target;
+            numOwnedCards += Math.min(target, ownedCards.count(card));
+        }
+
+        return (numOwnedCards * 100) / completeCards;
+    }
+
     // These functions provide a way to sort and compare items in the spell shop according to how many are already owned
     private final Function<Entry<InventoryItem, Integer>, Comparable<?>> fnOwnedCompare = new Function<Entry<InventoryItem, Integer>, Comparable<?>>() {
         @Override
