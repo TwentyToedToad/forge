@@ -144,12 +144,15 @@ public class BuyBoosterDialog {
     }
 
     private void updateCostAndPicture() {
-        if (boosterPackSelected) {
-            costLabel.setText(String.valueOf(QuestSpellShop.getCardValue(BoosterPack.fromSet(edition)) * Integer.parseInt(amountToBuy.getText())));
-            cardPicturePanel.setItem(BoosterPack.fromSet(edition));
-        } else {
-            costLabel.setText(String.valueOf(QuestSpellShop.getCardValue(BoosterBox.fromSet(edition)) * Integer.parseInt(amountToBuy.getText())));
-            cardPicturePanel.setItem(BoosterBox.fromSet(edition));
+        try {
+            if (boosterPackSelected) {
+                costLabel.setText(String.valueOf(QuestSpellShop.getCardValue(BoosterPack.fromSet(edition)) * Integer.parseInt(amountToBuy.getText())));
+                cardPicturePanel.setItem(BoosterPack.fromSet(edition));
+            } else {
+                costLabel.setText(String.valueOf(QuestSpellShop.getCardValue(BoosterBox.fromSet(edition)) * Integer.parseInt(amountToBuy.getText())));
+                cardPicturePanel.setItem(BoosterBox.fromSet(edition));
+            }
+        } catch (Exception ignored) {
         }
     }
 
